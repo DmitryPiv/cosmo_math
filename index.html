@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Космическая математика 🚀 - Планеты v13</title>
+    <title>Космическая математика 🚀 - Планеты v13.1</title>
     <style>
         :root {
             --bg: #0a0a1a;
@@ -127,7 +127,6 @@
         .star-icon.collected { filter: none; opacity: 1; animation: starPop 0.4s; }
         @keyframes starPop { 0%{ transform: scale(0) rotate(-30deg); } 60%{ transform: scale(1.3) rotate(10deg); } 100%{ transform: scale(1) rotate(0); } }
 
-        /* ====== новые стили для размещения поля ответа справа ====== */
         .task-row {
             display: flex;
             align-items: center;
@@ -140,7 +139,6 @@
             background: rgba(255,255,255,0.08);
             border-radius: 25px;
             padding: 15px 20px;
-            /* убираем margin-bottom, т.к. оно теперь в task-row */
             margin-bottom: 0;
             display: flex;
             align-items: center;
@@ -168,6 +166,8 @@
             transition: 0.3s; flex-shrink: 0;
         }
         .answer-field.filled { border-color: var(--star); border-style: solid; background: rgba(245,197,24,0.12); }
+        .answer-field.wrong-flash { border-color: var(--wrong); background: rgba(255,107,107,0.2); animation: shake 0.4s; }
+        @keyframes shake { 0%,100%{ transform: translateX(0); } 25%{ transform: translateX(-8px); } 50%{ transform: translateX(8px); } 75%{ transform: translateX(-5px); } }
 
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 280px; margin-bottom: 8px; }
         .key {
@@ -688,8 +688,13 @@ function onCorrect(){
 function onWrong(){
     sfxWrong(); gameState.totalWrong++;
     const field = document.getElementById('answerField')||document.getElementById('answerFieldC');
-    field.textContent=gameState.currentAnswer;
-    setTimeout(()=>{gameState.userInput=''; updateAnswerField();},1200);
+    // Убрали показ правильного ответа
+    field.classList.add('wrong-flash');
+    setTimeout(()=>{
+        gameState.userInput='';
+        updateAnswerField();
+        field.classList.remove('wrong-flash');
+    }, 800);
     saveStats();
 }
 function updateStarsDisplay(){ const track=document.getElementById('starTrack'); if(track)Array.from(track.children).forEach((s,i)=>s.classList.toggle('collected',i<gameState.stars)); if(gameState.stars>0)sfxStar(); }
