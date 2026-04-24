@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Космическая математика 🚀 - Планеты v4</title>
+    <title>Космическая математика 🚀 - Планеты v7</title>
     <style>
         :root {
             --bg: #0a0a1a;
@@ -53,8 +53,20 @@
         .btn.warn { background: var(--red); border: none; color: white; box-shadow: 0 6px 0 #b8324a; }
         .btn.gold { background: var(--yellow); border: none; color: #000; box-shadow: 0 6px 0 #b38f00; }
 
+        /* Глобальный счётчик звёзд */
+        .global-stars {
+            position: fixed; top: 20px; right: 70px; font-size: 22px; font-weight: bold;
+            color: gold; z-index: 15; pointer-events: none;
+            text-shadow: 0 0 10px gold; animation: glitter 1.5s infinite;
+            background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px;
+        }
+        @keyframes glitter {
+            0%,100% { text-shadow: 0 0 10px gold; }
+            50% { text-shadow: 0 0 20px yellow; }
+        }
+
         /* Стартовое меню */
-        .menu-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; width: 100%; }
+        .menu-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; width: 100%; margin-top: 30px; }
         .rocket-area { position: relative; margin-bottom: 20px; }
         .rocket { font-size: 80px; position: relative; z-index: 1; }
         .menu-title { font-size: 48px; font-weight: 900; color: white; text-shadow: 0 0 30px rgba(255,255,255,0.5); }
@@ -68,7 +80,12 @@
         }
         .menu-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.15); }
 
-        .quick-top-bar { /* те же */ }
+        /* Быстрая игра */
+        .quick-top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.06); backdrop-filter: blur(15px);
+            border-radius: 25px; padding: 10px 16px; width: 100%; border: 1px solid rgba(255,255,255,0.1);
+        }
         .level-badge { display: flex; align-items: center; gap: 6px; color: white; font-weight: 700; font-size: 14px; }
         .diff-btn {
             background: rgba(255,255,255,0.1); border: none; color: white; padding: 6px 12px;
@@ -86,7 +103,7 @@
             border: 2px solid rgba(255,255,255,0.1);
         }
         .character-zone { position: relative; width: 120px; height: 120px; margin-bottom: 10px; }
-        .astronaut { font-size: 80px; transition: 0.2s; cursor: pointer; text-align: center; }
+        .astronaut { font-size: 80px; transition: 0.2s; cursor: pointer; text-align: center; display: block; }
         .astronaut.bounce { animation: bounceAnim 0.6s; }
         .astronaut.shake { animation: shakeAnim 0.5s; }
         @keyframes bounceAnim { 0%,100%{ transform: translateY(0); } 40%{ transform: translateY(-30px); } 60%{ transform: translateY(-8px); } }
@@ -94,7 +111,7 @@
         .speech {
             position: absolute; top: -15px; right: -60px; background: white; color: #222;
             padding: 10px 16px; border-radius: 20px; font-size: 14px; font-weight: 700;
-            white-space: nowrap; opacity: 0; transform: scale(0.7); transition: 0.3s;
+            white-space: nowrap; opacity: 0; transform: scale(0.7); transition: 0.3s; pointer-events: none;
         }
         .speech.visible { opacity: 1; transform: scale(1); }
         .star-track { display: flex; gap: 6px; margin-bottom: 15px; }
@@ -112,7 +129,7 @@
         .task-unknown { font-size: 48px; font-weight: 900; color: var(--yellow); animation: unknownPulse 1.2s infinite; }
         @keyframes unknownPulse { 0%,100%{ opacity:1; transform: scale(1); } 50%{ opacity:0.4; transform: scale(1.05); } }
         .visual-aid { display: flex; flex-direction: column; align-items: center; margin: 10px 0; gap: 6px; }
-        .counter-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+        .counter-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; } /* кружки справа */
         .counter-dot {
             width: 22px; height: 22px; border-radius: 50%;
             background: var(--green); box-shadow: 0 0 10px rgba(78,204,163,0.7);
@@ -134,6 +151,14 @@
         .key:active { transform: scale(0.95); }
         .key-clear { background: #ff6b6b; box-shadow: 0 6px 0 #c0392b; font-size: 26px; }
         .key-check { background: var(--correct); box-shadow: 0 6px 0 #2e8b57; font-size: 26px; }
+        .comparison-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 10px 0; }
+        .comp-signs { display: flex; gap: 15px; }
+        .comp-actions { display: flex; gap: 15px; }
+        .comp-btn-sq {
+            width: 70px; height: 70px; background: var(--btn); color: white; font-size: 36px;
+            font-weight: 900; border: none; border-radius: 15px; cursor: pointer;
+            box-shadow: 0 6px 0 #12123a; transition: 0.1s;
+        }
         .topic-selector { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
         .topic-chip {
             background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
@@ -143,12 +168,8 @@
         .topic-chip.active-topic { background: rgba(245,197,24,0.2); border-color: var(--star); color: var(--star); }
 
         /* Кампания: планеты */
-        .planet-view {
-            width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px;
-        }
-        .planet-nav {
-            display: flex; justify-content: space-between; align-items: center; width: 100%;
-        }
+        .planet-view { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .planet-nav { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 10px; }
         .planet-card-round {
             background: rgba(255,255,255,0.1); border-radius: 50%; width: 200px; height: 200px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -161,45 +182,16 @@
             cursor: pointer; color: white;
         }
         .level-cell.completed { background: var(--correct); color: black; }
-        .progress-info { text-align: center; color: white; margin: 10px 0; }
-        .total-stars-display {
-            position: absolute; top: 20px; right: 70px; font-size: 24px; color: gold;
-            animation: glitter 1.5s infinite;
-        }
-        @keyframes glitter {
-            0%,100% { text-shadow: 0 0 10px gold; }
-            50% { text-shadow: 0 0 20px yellow; }
-        }
-
-        .overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7);
-            display: flex; justify-content: center; align-items: center; z-index: 20;
-            opacity: 0; pointer-events: none; transition: 0.4s;
-        }
-        .overlay.open { opacity:1; pointer-events: all; }
-        .dialog {
-            background: white; border-radius: 30px; padding: 30px; text-align: center;
-            max-width: 340px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .dialog h2 { font-size: 28px; margin: 10px 0; }
-        .big-emoji { font-size: 80px; }
-        .btn-sm { padding: 10px 20px; font-size: 16px; border-radius: 20px; }
-        .sound-toggle { position: fixed; top: 20px; right: 20px; z-index: 15; background: rgba(255,255,255,0.1); border: none; font-size: 28px; padding: 8px; border-radius: 50%; cursor: pointer; }
+        .progress-info { text-align: center; color: white; margin: 5px 0; font-size: 14px; }
         .planet-arrow { font-size: 36px; background: none; border: none; color: white; cursor: pointer; }
-        .settings-btn { margin-top: 10px; }
-        .comparison-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 10px 0; }
-        .comp-signs { display: flex; gap: 15px; }
-        .comp-actions { display: flex; gap: 15px; }
-        .comp-btn-sq {
-            width: 70px; height: 70px; background: var(--btn); color: white; font-size: 36px;
-            font-weight: 900; border: none; border-radius: 15px; cursor: pointer;
-            box-shadow: 0 6px 0 #12123a; transition: 0.1s;
-        }
     </style>
 </head>
 <body>
 <div class="cosmos"><div class="star-field"></div></div>
-<button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊</button>
+
+<!-- Глобальный счётчик звёзд -->
+<div class="global-stars" id="globalStarsDisplay">⭐ 0</div>
+<button class="sound-toggle" id="soundToggle" onclick="toggleSound()" style="position:fixed;top:20px;right:20px;z-index:15;background:rgba(255,255,255,0.1);border:none;font-size:28px;padding:8px;border-radius:50%;cursor:pointer;">🔊</button>
 
 <!-- СТАРТОВОЕ МЕНЮ -->
 <div class="screen active" id="menuScreen">
@@ -218,7 +210,7 @@
 
 <!-- БЫСТРАЯ ИГРА -->
 <div class="screen" id="quickGameScreen">
-    <div class="quick-top-bar" style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+    <div class="quick-top-bar">
         <button class="back-btn" onclick="goToMenu()">←</button>
         <div class="level-badge"><span id="qPlanetIcon">🟢</span><span id="qLevelLabel">Лёгкий</span></div>
         <div style="display:flex; gap:4px;">
@@ -235,13 +227,12 @@
     <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:20px;">
         <button class="back-btn" onclick="goToMenu()">←</button>
         <h2 style="color:white;">🏆 Кампания</h2>
-        <div class="total-stars-display" id="totalStarsDisplay">⭐ 0</div>
     </div>
     <div id="planetView" class="planet-view"></div>
     <div id="campaignPlayArea" style="display:none; width:100%;"></div>
 </div>
 
-<!-- ОВЕРЛЕИ (победа, инфо, настройки, подтверждение) -->
+<!-- ОВЕРЛЕИ -->
 <div class="overlay" id="winOverlay">
     <div class="dialog">
         <div class="big-emoji" id="winEmoji">🏆</div>
@@ -253,7 +244,6 @@
         </div>
     </div>
 </div>
-
 <div class="overlay" id="infoOverlay">
     <div class="dialog">
         <h2 id="infoTitle"></h2>
@@ -261,7 +251,6 @@
         <button class="btn primary" onclick="closeInfo()">OK</button>
     </div>
 </div>
-
 <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
     <div class="dialog" style="background:#1a1a3e; color:white;" onclick="event.stopPropagation()">
         <h3>⚙️ Настройки</h3>
@@ -269,7 +258,6 @@
         <button class="btn" onclick="closeSettingsManual()">Закрыть</button>
     </div>
 </div>
-
 <div class="overlay" id="confirmOverlay">
     <div class="dialog">
         <p>Вы уверены, что хотите сбросить весь прогресс кампании?</p>
@@ -279,7 +267,7 @@
 </div>
 
 <script>
-// Звук (без изменений)
+// Звук
 let soundEnabled = true;
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -308,14 +296,41 @@ function toggleSound() {
     if(soundEnabled) sfxClick();
 }
 
-// Данные планет
+// Данные планет с уровнями
 const planetsData = [
-    { id:0, name:'Зелёная', icon:'🟢', topic:'plusminus', color:'var(--green)', threshold:40, bonusThreshold:50 },
-    { id:1, name:'Жёлтая', icon:'🟡', topic:'comparison', color:'var(--yellow)', threshold:40, bonusThreshold:50 },
-    { id:2, name:'Красная', icon:'🔴', topic:'mixed', color:'var(--red)', threshold:40, bonusThreshold:50 }
+    {
+        id: 0, name: 'Зелёная', icon: '🟢', topic: 'plusminus', color: 'var(--green)',
+        threshold: 40, bonusThreshold: 50,
+        levels: [
+            { difficulty: 'easy' }, { difficulty: 'easy' }, { difficulty: 'easy' },
+            { difficulty: 'medium' }, { difficulty: 'medium' }, { difficulty: 'medium' },
+            { difficulty: 'hard' }, { difficulty: 'hard' }, { difficulty: 'hard' },
+            { difficulty: 'hard' }
+        ]
+    },
+    {
+        id: 1, name: 'Жёлтая', icon: '🟡', topic: 'comparison', color: 'var(--yellow)',
+        threshold: 40, bonusThreshold: 50,
+        levels: [
+            { difficulty: 'easy' }, { difficulty: 'easy' }, { difficulty: 'easy' },
+            { difficulty: 'medium' }, { difficulty: 'medium' }, { difficulty: 'medium' },
+            { difficulty: 'hard' }, { difficulty: 'hard' }, { difficulty: 'hard' },
+            { difficulty: 'hard' }
+        ]
+    },
+    {
+        id: 2, name: 'Красная', icon: '🔴', topic: 'mixed', color: 'var(--red)',
+        threshold: 40, bonusThreshold: 50,
+        levels: [
+            { difficulty: 'easy' }, { difficulty: 'easy' }, { difficulty: 'easy' },
+            { difficulty: 'medium' }, { difficulty: 'medium' }, { difficulty: 'medium' },
+            { difficulty: 'hard' }, { difficulty: 'hard' }, { difficulty: 'hard' },
+            { difficulty: 'hard' }
+        ]
+    }
 ];
 
-// Состояние
+// Состояние игры
 const gameState = {
     mode: 'quick',
     difficulty: 'easy',
@@ -332,7 +347,7 @@ const gameState = {
         currentLevel: 0,
         starsPerLevel: {},
         unlockedPlanets: [0],
-        bonusCompleted: {},
+        bonusCompleted: {}
     }
 };
 
@@ -343,13 +358,25 @@ function showScreen(id) {
 }
 function goToMenu() { sfxClick(); showScreen('menuScreen'); }
 
-// Быстрая игра (сокращенно)
+// Глобальный счётчик звёзд (общий)
+function updateGlobalStarsDisplay() {
+    let total = 0;
+    for (const key in gameState.campaign.starsPerLevel) {
+        total += gameState.campaign.starsPerLevel[key];
+    }
+    const el = document.getElementById('globalStarsDisplay');
+    if (el) el.textContent = `⭐ ${total}`;
+}
+
+// Быстрая игра
 function startQuickGame() {
     gameState.mode = 'quick'; gameState.stars = 0;
     gameState.difficulty = 'easy'; gameState.topic = 'plusminus';
     document.getElementById('qEasy').className = 'diff-btn active-easy';
     document.getElementById('qMedium').className = 'diff-btn';
     document.getElementById('qHard').className = 'diff-btn';
+    document.getElementById('qPlanetIcon').textContent = '🟢';
+    document.getElementById('qLevelLabel').textContent = 'Лёгкий';
     buildQuickGameUI();
     showScreen('quickGameScreen');
     generateTask();
@@ -357,7 +384,7 @@ function startQuickGame() {
 function buildQuickGameUI() {
     const card = document.getElementById('quickGameCard');
     card.innerHTML = `
-        <div class="character-zone"><span class="astronaut" id="astronaut" onclick="tapAstronaut()">👨‍🚀</span><div class="speech" id="speech">Поехали!</div></div>
+        <div class="character-zone"><span class="astronaut" id="astronaut" onclick="tapAstronaut()">👨‍🚀</span><div class="speech" id="speech"></div></div>
         <div class="star-track" id="starTrack">${'<span class="star-icon">⭐</span>'.repeat(5)}</div>
         <div class="visual-aid" id="visualAid"></div>
         <div class="task-box">
@@ -395,22 +422,19 @@ function startCampaign() {
     gameState.mode = 'campaign';
     loadCampaignProgress();
     showScreen('campaignScreen');
-    updateTotalStarsDisplay();
+    updateGlobalStarsDisplay();
     showPlanet(0);
 }
 function loadCampaignProgress() {
     try {
         const raw = localStorage.getItem('cosmoCampaignV2');
         if (raw) Object.assign(gameState.campaign, JSON.parse(raw));
-    } catch(e){}
+    } catch(e) {}
+    updateGlobalStarsDisplay();
 }
 function saveCampaignProgress() {
     localStorage.setItem('cosmoCampaignV2', JSON.stringify(gameState.campaign));
-}
-function updateTotalStarsDisplay() {
-    let total = 0;
-    for (const key in gameState.campaign.starsPerLevel) total += gameState.campaign.starsPerLevel[key];
-    document.getElementById('totalStarsDisplay').textContent = `⭐ ${total}`;
+    updateGlobalStarsDisplay();
 }
 function showPlanet(index) {
     if (!gameState.campaign.unlockedPlanets.includes(index)) return;
@@ -421,14 +445,14 @@ function showPlanet(index) {
     const allMax = planet.levels.every((_, idx) => (starsPerLevel[`${index}-${idx}`] || 0) === 5);
     const bonusAvailable = allMax && !gameState.campaign.bonusCompleted[index];
     const nextThreshold = planet.threshold;
-    const hasNext = gameState.campaign.unlockedPlanets.includes(index+1);
-    const thresholdText = hasNext ? '' : `Следующая планета откроется на ${nextThreshold} звёздах (сейчас ${totalStars})`;
+    const nextPlanetUnlocked = gameState.campaign.unlockedPlanets.includes(index + 1);
+    const thresholdText = nextPlanetUnlocked ? '' : `Следующая планета откроется на ${nextThreshold} звёздах (сейчас ${totalStars})`;
     const bonusText = allMax ? 'Бонус открыт!' : `Бонусный уровень откроется на 50 звёздах (сейчас ${totalStars})`;
 
     const view = document.getElementById('planetView');
     view.innerHTML = `
         <div class="planet-nav">
-            <button class="planet-arrow" onclick="showPlanet(${index-1})" ${index===0 ? 'disabled' : ''} style="visibility:${index===0?'hidden':'visible'};">◀</button>
+            <button class="planet-arrow" onclick="showPlanet(${index-1})" ${index===0?'disabled':''} style="visibility:${index===0?'hidden':'visible'};">◀</button>
             <div class="planet-card-round" style="border-color:${planet.color}; background:${planet.color}22;">
                 <div style="font-size:60px;">${planet.icon}</div>
                 <div style="color:white;">${planet.name}</div>
@@ -445,6 +469,7 @@ function showPlanet(index) {
         <div class="progress-info">${bonusText}</div>
         ${bonusAvailable ? `<button class="btn gold" onclick="startBonusLevel(${index})">🎁 Бонус-уровень!</button>` : ''}
     `;
+    document.getElementById('campaignPlayArea').style.display = 'none';
 }
 function startPlanetLevel(planetId, levelIdx) {
     const planet = planetsData[planetId];
@@ -461,9 +486,9 @@ function startPlanetLevel(planetId, levelIdx) {
     updateStarsDisplayCampaign();
     generateTask();
 }
-function buildCampaignGameUI(container, planet, isBonus=false) {
+function buildCampaignGameUI(container, planet, isBonus = false) {
     container.innerHTML = `
-        <div class="game-card" style="background: rgba(255,255,255,0.07);">
+        <div class="game-card">
             <div class="character-zone"><span class="astronaut" id="astronautC" onclick="tapAstronaut()">👨‍🚀</span><div class="speech" id="speechC">${isBonus?'Бонус!':'Уровень '+(gameState.campaign.currentLevel+1)}</div></div>
             ${isBonus ? '<div id="bonusTimer" style="font-size:32px;color:white;">60</div>' : `<div class="star-track" id="starTrackC">${'<span class="star-icon">⭐</span>'.repeat(gameState.maxStars)}</div>`}
             <div class="visual-aid" id="visualAidC"></div>
@@ -477,13 +502,20 @@ function buildCampaignGameUI(container, planet, isBonus=false) {
             <button class="btn warn" onclick="exitCampaignLevel()">Выйти</button>
         </div>`;
     gameState.userInput = ''; updateAnswerField(); buildKeypad();
-    if (isBonus) document.getElementById('starTrackC').style.display = 'none';
+    if (isBonus) {
+        document.getElementById('starTrackC').style.display = 'none';
+        // Запускаем таймер после построения DOM
+        setTimeout(() => {
+            const timerEl = document.getElementById('bonusTimer');
+            if (timerEl && !window.bonusInterval) startBonusTimer(60);
+        }, 100);
+    }
 }
 function exitCampaignLevel() {
     document.getElementById('campaignPlayArea').style.display = 'none';
     document.getElementById('planetView').style.display = '';
     showPlanet(gameState.campaign.currentPlanet);
-    if (window.bonusInterval) clearInterval(window.bonusInterval);
+    if (window.bonusInterval) { clearInterval(window.bonusInterval); window.bonusInterval = null; }
 }
 function startBonusLevel(planetId) {
     const planet = planetsData[planetId];
@@ -495,17 +527,19 @@ function startBonusLevel(planetId) {
     const area = document.getElementById('campaignPlayArea');
     area.style.display = 'block';
     buildCampaignGameUI(area, planet, true);
-    startBonusTimer(60);
 }
 function startBonusTimer(sec) {
     let time = sec;
     const timerEl = document.getElementById('bonusTimer');
+    if (!timerEl) return;
     timerEl.textContent = time;
+    if (window.bonusInterval) clearInterval(window.bonusInterval);
     window.bonusInterval = setInterval(() => {
         time--;
-        timerEl.textContent = time;
+        if (timerEl) timerEl.textContent = time;
         if (time <= 0) {
             clearInterval(window.bonusInterval);
+            window.bonusInterval = null;
             finishBonusLevel();
         }
     }, 1000);
@@ -517,15 +551,13 @@ function finishBonusLevel() {
     exitCampaignLevel();
 }
 
-// Инфо вместо alert
+// Информационное окно
 function showInfo(msg) {
     document.getElementById('infoTitle').textContent = 'Сообщение';
     document.getElementById('infoMsg').textContent = msg;
     document.getElementById('infoOverlay').classList.add('open');
 }
-function closeInfo() {
-    document.getElementById('infoOverlay').classList.remove('open');
-}
+function closeInfo() { document.getElementById('infoOverlay').classList.remove('open'); }
 
 // Клавиатуры
 function buildKeypad() {
@@ -566,8 +598,8 @@ function setupInputMode(taskTopic) {
 }
 
 // Генерация примеров
-function getMaxByDifficulty(){ return gameState.difficulty==='easy'?10:gameState.difficulty==='medium'?20:50; }
-function chooseTopicForTask(){ return gameState.topic!=='mixed'?gameState.topic:Math.random()<0.5?'plusminus':'comparison'; }
+function getMaxByDifficulty() { return gameState.difficulty==='easy'?10:gameState.difficulty==='medium'?20:50; }
+function chooseTopicForTask() { return gameState.topic!=='mixed'?gameState.topic:(Math.random()<0.5?'plusminus':'comparison'); }
 function generateValidNumbers(op, max) {
     for(let i=0;i<50;i++) {
         let a = Math.floor(Math.random()*(max-1))+1;
@@ -605,7 +637,7 @@ function generateTask() {
     gameState.currentAnswer=answer;
     gameState.userInput=''; updateAnswerField();
     setupInputMode(taskTopic);
-    renderVisualAid(taskTopic,a,b,taskTopic==='plusminus'&&op.textContent==='-');
+    renderVisualAid(taskTopic,a,b, op.textContent==='-');
 }
 function getEl(id){ return document.getElementById(id)||document.getElementById(id+'C'); }
 function renderVisualAid(taskTopic,val1,val2,isSub){
@@ -616,7 +648,8 @@ function renderVisualAid(taskTopic,val1,val2,isSub){
         const rows = Math.ceil(count/10);
         for(let r=0;r<rows;r++){
             const row = document.createElement('div'); row.className='counter-row';
-            for(let i=0;i<Math.min(10,count-r*10);i++){
+            const dotsInRow = Math.min(10, count - r*10);
+            for(let i=0;i<dotsInRow;i++){
                 const dot = document.createElement('span'); dot.className='counter-dot';
                 dot.style.backgroundColor=color; dot.style.boxShadow=`0 0 10px ${color}`;
                 row.appendChild(dot);
@@ -624,7 +657,13 @@ function renderVisualAid(taskTopic,val1,val2,isSub){
             container.appendChild(row);
         }
     };
-    makeDots(val1,'var(--green)'); if(!isSub) makeDots(val2,'var(--yellow)');
+    makeDots(val1,'var(--green)');
+    if (isSub) {
+        // вычитание: показываем вычитаемое красными кружками
+        makeDots(val2,'var(--red)');
+    } else {
+        makeDots(val2,'var(--yellow)');
+    }
 }
 function pressDigit(d){ sfxClick(); if(gameState.userInput.length>=3)return; gameState.userInput+=d; updateAnswerField(); }
 function pressComparison(sign){ sfxClick(); gameState.userInput=sign; updateAnswerField(); }
@@ -643,15 +682,24 @@ function submitAnswer(){
 }
 function onCorrect(){
     sfxCorrect(); gameState.totalCorrect++; gameState.totalStarsEver++;
-    if(gameState.mode==='quick'){ gameState.stars++; updateStarsDisplay(); if(gameState.stars>=5){setTimeout(showWinQuick,600);return;} }
-    else if(gameState.mode==='campaign'){
+    if(gameState.mode==='quick'){
+        gameState.stars++; updateStarsDisplay();
+        if(gameState.stars>=5){ setTimeout(showWinQuick,600); return; }
+    }else if(gameState.mode==='campaign'){
         if(gameState.campaign.currentLevel>=0){
             gameState.stars++; updateStarsDisplayCampaign();
             const key = `${gameState.campaign.currentPlanet}-${gameState.campaign.currentLevel}`;
             const prev = gameState.campaign.starsPerLevel[key]||0;
-            if(gameState.stars>prev){ gameState.campaign.starsPerLevel[key]=gameState.stars; checkPlanetCompletion(); saveCampaignProgress(); updateTotalStarsDisplay(); }
+            if(gameState.stars>prev){
+                gameState.campaign.starsPerLevel[key]=gameState.stars;
+                checkPlanetCompletion();
+                saveCampaignProgress(); // включает updateGlobalStarsDisplay
+            } else {
+                // всё равно обновим глобальный счётчик, так как звёзды кампании могли не измениться, но общий арифметический не менялся
+                updateGlobalStarsDisplay();
+            }
             if(gameState.stars>=5){ setTimeout(completeLevel,600); return; }
-        } else { gameState.stars++; }
+        }else{ gameState.stars++; }
     }
     setTimeout(generateTask,800); saveStats();
 }
@@ -690,7 +738,7 @@ function handleWinAction(){ document.getElementById('winOverlay').classList.remo
 function handleWinExit(){ document.getElementById('winOverlay').classList.remove('open'); exitCampaignLevel(); }
 
 // Статистика и настройки
-function openStats(){ sfxClick(); updateStatsDialog(); document.getElementById('statsOverlay').classList.add('open'); }
+function openStats(){ sfxClick(); updateStatsDialog(); document.getElementById('statsOverlay')?.classList.add('open'); }
 function updateStatsDialog(){
     const acc = gameState.totalCorrect+gameState.totalWrong>0?Math.round(gameState.totalCorrect/(gameState.totalCorrect+gameState.totalWrong)*100):100;
     document.getElementById('statsContent').innerHTML = `<p>✅ Правильно: <b>${gameState.totalCorrect}</b></p><p>❌ Ошибок: <b>${gameState.totalWrong}</b></p><p>🎯 Точность: <b>${acc}%</b></p><p>⭐ Всего звёзд: <b>${gameState.totalStarsEver}</b></p>`;
@@ -710,7 +758,7 @@ function closeConfirm(){ document.getElementById('confirmOverlay').classList.rem
 function resetCampaignConfirmed(){
     gameState.campaign = { currentPlanet:0, currentLevel:0, starsPerLevel:{}, unlockedPlanets:[0], bonusCompleted:{} };
     saveCampaignProgress();
-    updateTotalStarsDisplay();
+    updateGlobalStarsDisplay();
     showPlanet(0);
     document.getElementById('confirmOverlay').classList.remove('open');
 }
@@ -718,7 +766,8 @@ function tapAstronaut(){ playTone(350,0.08,'sine',0.06); const a=document.getEle
 
 // Запуск
 loadStats();
-document.addEventListener('touchstart', e => { if(e.target.matches('.key, .comp-btn, .diff-btn, .topic-chip, .menu-btn')) e.preventDefault(); }, {passive: false});
+updateGlobalStarsDisplay();
+document.addEventListener('touchstart', e => { if(e.target.matches('.key, .comp-btn-sq, .diff-btn, .topic-chip, .menu-btn')) e.preventDefault(); }, {passive: false});
 </script>
 </body>
 </html>
