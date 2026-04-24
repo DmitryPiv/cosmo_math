@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Космическая математика 🚀 - Планеты v10</title>
+    <title>Космическая математика 🚀 - Планеты v13</title>
     <style>
         :root {
             --bg: #0a0a1a;
@@ -31,6 +31,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
             background: radial-gradient(circle at 20% 20%, #1a1a3e, #0a0a1a);
+            transition: background 1s;
         }
         .star-field {
             position: absolute; width: 100%; height: 100%;
@@ -69,10 +70,7 @@
             text-shadow: 0 0 10px gold; animation: glitter 1.5s infinite;
             background: rgba(0,0,0,0.5); padding: 4px 12px; border-radius: 20px;
         }
-        @keyframes glitter {
-            0%,100% { text-shadow: 0 0 10px gold; }
-            50% { text-shadow: 0 0 20px yellow; }
-        }
+        @keyframes glitter { 0%,100% { text-shadow: 0 0 10px gold; } 50% { text-shadow: 0 0 20px yellow; } }
 
         .menu-container {
             display: flex; flex-direction: column; align-items: center;
@@ -134,8 +132,6 @@
         }
         .task-num { font-size: 48px; font-weight: 900; color: white; min-width: 50px; text-align: center; }
         .task-op { font-size: 36px; font-weight: 900; color: var(--star); }
-        .task-op.pulse { animation: opPulse 0.8s infinite; }
-        @keyframes opPulse { 0%,100%{ opacity:1; transform: scale(1); } 50%{ opacity:0.4; transform: scale(1.15); } }
         .task-unknown { font-size: 48px; font-weight: 900; color: var(--yellow); animation: unknownPulse 1.2s infinite; }
         @keyframes unknownPulse { 0%,100%{ opacity:1; transform: scale(1); } 50%{ opacity:0.4; transform: scale(1.05); } }
         .visual-aid { display: flex; flex-direction: column; align-items: center; margin: 10px 0; gap: 6px; }
@@ -161,21 +157,6 @@
         .key:active { transform: scale(0.95); }
         .key-clear { background: #ff6b6b; box-shadow: 0 6px 0 #c0392b; font-size: 26px; }
         .key-check { background: var(--correct); box-shadow: 0 6px 0 #2e8b57; font-size: 26px; }
-        .comparison-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 10px 0; }
-        .comp-signs { display: flex; gap: 15px; }
-        .comp-actions { display: flex; gap: 15px; }
-        .comp-btn-sq {
-            width: 70px; height: 70px; background: var(--btn); color: white; font-size: 36px;
-            font-weight: 900; border: none; border-radius: 15px; cursor: pointer;
-            box-shadow: 0 6px 0 #12123a; transition: 0.1s;
-        }
-        .topic-selector { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; margin-top: 10px; }
-        .topic-chip {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.7); padding: 6px 12px; border-radius: 18px; font-size: 12px;
-            font-weight: 700; cursor: pointer; transition: 0.2s;
-        }
-        .topic-chip.active-topic { background: rgba(245,197,24,0.2); border-color: var(--star); color: var(--star); }
 
         .planet-view { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
         .planet-nav { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 10px; }
@@ -215,7 +196,6 @@
             .task-op { font-size: 28px; }
             .task-unknown { font-size: 36px; }
             .key { font-size: 26px; padding: 10px 0; }
-            .comp-btn-sq { width: 55px; height: 55px; font-size: 28px; }
             .planet-card-round { width: 150px; height: 150px; }
             .planet-card-round div:first-child { font-size: 40px; }
             .level-cell { width: 32px; height: 32px; font-size: 12px; }
@@ -230,7 +210,6 @@
 </head>
 <body>
 <div class="cosmos"><div class="star-field"></div></div>
-
 <div class="global-stars" id="globalStarsDisplay">⭐ 0</div>
 <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" style="position:fixed;top:20px;right:20px;z-index:15;background:rgba(255,255,255,0.1);border:none;font-size:28px;padding:8px;border-radius:50%;cursor:pointer;">🔊</button>
 
@@ -255,9 +234,9 @@
         <button class="back-btn" onclick="goToMenu()">←</button>
         <div class="level-badge"><span id="qPlanetIcon">🟢</span><span id="qLevelLabel">Лёгкий</span></div>
         <div style="display:flex; gap:4px;">
-            <button class="diff-btn active-easy" onclick="setQuickDifficulty('easy')" id="qEasy">🟢</button>
-            <button class="diff-btn" onclick="setQuickDifficulty('medium')" id="qMedium">🟡</button>
-            <button class="diff-btn" onclick="setQuickDifficulty('hard')" id="qHard">🔴</button>
+            <button class="diff-btn active-easy" onclick="setQuickDifficulty('easy')" id="qEasy">10</button>
+            <button class="diff-btn" onclick="setQuickDifficulty('medium')" id="qMedium">50</button>
+            <button class="diff-btn" onclick="setQuickDifficulty('hard')" id="qHard">100</button>
         </div>
     </div>
     <div class="game-card" id="quickGameCard"></div>
@@ -273,7 +252,7 @@
     <div id="campaignPlayArea" style="display:none; width:100%;"></div>
 </div>
 
-<!-- Оверлей победы -->
+<!-- Оверлеи -->
 <div class="overlay" id="winOverlay">
     <div class="dialog">
         <div class="big-emoji" id="winEmoji">🏆</div>
@@ -281,12 +260,9 @@
         <p id="winMsg"></p>
         <div style="display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:15px;">
             <button class="btn primary" id="winActionBtn" onclick="handleWinAction()"></button>
-            <button class="btn warn btn-sm" id="winExitBtn" onclick="handleWinExit()" style="display:none;">Выйти</button>
         </div>
     </div>
 </div>
-
-<!-- Информационное окно -->
 <div class="overlay" id="infoOverlay">
     <div class="dialog">
         <h2 id="infoTitle"></h2>
@@ -294,8 +270,6 @@
         <button class="btn primary" onclick="closeInfo()">OK</button>
     </div>
 </div>
-
-<!-- Настройки -->
 <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
     <div class="dialog" style="background:#1a1a3e; color:white;" onclick="event.stopPropagation()">
         <h3>⚙️ Настройки</h3>
@@ -303,8 +277,6 @@
         <button class="btn" onclick="closeSettingsManual()">Закрыть</button>
     </div>
 </div>
-
-<!-- Подтверждение сброса -->
 <div class="overlay" id="confirmOverlay">
     <div class="dialog">
         <p>Вы уверены, что хотите сбросить весь прогресс кампании?</p>
@@ -343,7 +315,7 @@ function toggleSound() {
     if(soundEnabled) sfxClick();
 }
 
-// ==================== ДАННЫЕ ====================
+// ==================== ДАННЫЕ ПЛАНЕТ ====================
 const planetsData = [
     {
         id: 0, name: 'Зелёная', icon: '🟢', topic: 'plusminus', color: 'var(--green)',
@@ -356,7 +328,7 @@ const planetsData = [
         ]
     },
     {
-        id: 1, name: 'Жёлтая', icon: '🟡', topic: 'comparison', color: 'var(--yellow)',
+        id: 1, name: 'Жёлтая', icon: '🟡', topic: 'make', color: 'var(--yellow)',
         threshold: 40,
         levels: [
             { difficulty: 'easy' }, { difficulty: 'easy' }, { difficulty: 'easy' },
@@ -366,7 +338,7 @@ const planetsData = [
         ]
     },
     {
-        id: 2, name: 'Красная', icon: '🔴', topic: 'mixed', color: 'var(--red)',
+        id: 2, name: 'Красная', icon: '🔴', topic: 'chain', color: 'var(--red)',
         threshold: 40,
         levels: [
             { difficulty: 'easy' }, { difficulty: 'easy' }, { difficulty: 'easy' },
@@ -402,7 +374,7 @@ function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
-function goToMenu() { sfxClick(); showScreen('menuScreen'); }
+function goToMenu() { sfxClick(); showScreen('menuScreen'); document.querySelector('.cosmos').style.background = ''; }
 
 // ==================== ГЛОБАЛЬНЫЙ СЧЁТЧИК ====================
 function updateGlobalStarsDisplay() {
@@ -419,7 +391,7 @@ function startQuickGame() {
     document.getElementById('qMedium').className = 'diff-btn';
     document.getElementById('qHard').className = 'diff-btn';
     document.getElementById('qPlanetIcon').textContent = '🟢';
-    document.getElementById('qLevelLabel').textContent = 'Лёгкий';
+    document.getElementById('qLevelLabel').textContent = '10';
     buildQuickGameUI();
     showScreen('quickGameScreen');
     generateTask();
@@ -431,17 +403,14 @@ function buildQuickGameUI() {
         <div class="star-track" id="starTrack">${'<span class="star-icon">⭐</span>'.repeat(5)}</div>
         <div class="visual-aid" id="visualAid"></div>
         <div class="task-box">
-            <span class="task-num" id="num1">5</span><span class="task-op" id="opSign">+</span>
-            <span class="task-num" id="num2">3</span><span class="task-op equal-sign" id="eqSign">=</span>
+            <span class="task-num" id="num1">5</span>
+            <span class="task-op" id="opSign">+</span>
+            <span class="task-num" id="num2">3</span>
+            <span class="task-op">=</span>
             <span class="task-unknown" id="unknownMark">?</span>
         </div>
         <div class="answer-field" id="answerField"></div>
-        <div id="inputArea"><div class="keypad" id="keypad"></div><div class="comparison-pad" id="comparisonPad" style="display:none;"></div></div>
-        <div class="topic-selector" id="topicSelector">
-            <button class="topic-chip active-topic" onclick="setQuickTopic('plusminus')">➕➖ Сложение и вычитание</button>
-            <button class="topic-chip" onclick="setQuickTopic('comparison')">⚖️ Сравнение</button>
-            <button class="topic-chip" onclick="setQuickTopic('mixed')">🎲 Всё</button>
-        </div>`;
+        <div class="keypad" id="keypad"></div>`;
     gameState.userInput = ''; updateAnswerField(); buildKeypad();
 }
 function setQuickDifficulty(lvl) {
@@ -450,13 +419,7 @@ function setQuickDifficulty(lvl) {
     document.getElementById('qMedium').className = 'diff-btn'+(lvl==='medium'?' active-medium':'');
     document.getElementById('qHard').className = 'diff-btn'+(lvl==='hard'?' active-hard':'');
     document.getElementById('qPlanetIcon').textContent = lvl==='easy'?'🟢':(lvl==='medium'?'🟡':'🔴');
-    document.getElementById('qLevelLabel').textContent = lvl==='easy'?'Лёгкий':(lvl==='medium'?'Средний':'Сложный');
-    gameState.stars=0; updateStarsDisplay(); generateTask();
-}
-function setQuickTopic(topic) {
-    gameState.topic = topic;
-    document.querySelectorAll('#topicSelector .topic-chip').forEach(c=>c.classList.remove('active-topic'));
-    event.target.classList.add('active-topic');
+    document.getElementById('qLevelLabel').textContent = lvl==='easy'?'10':(lvl==='medium'?'50':'100');
     gameState.stars=0; updateStarsDisplay(); generateTask();
 }
 
@@ -470,17 +433,22 @@ function startCampaign() {
 }
 function loadCampaignProgress() {
     try {
-        const raw = localStorage.getItem('cosmoCampaignV2');
+        const raw = localStorage.getItem('cosmoCampaignV3');
         if (raw) Object.assign(gameState.campaign, JSON.parse(raw));
     } catch(e) {}
     updateGlobalStarsDisplay();
 }
 function saveCampaignProgress() {
-    localStorage.setItem('cosmoCampaignV2', JSON.stringify(gameState.campaign));
+    localStorage.setItem('cosmoCampaignV3', JSON.stringify(gameState.campaign));
     updateGlobalStarsDisplay();
+}
+function changeBackground(planetId) {
+    const bgColors = ['#1a2a1a', '#2a2a1a', '#2a1a1a'];
+    document.querySelector('.cosmos').style.background = `radial-gradient(circle at 20% 20%, ${bgColors[planetId]}, #0a0a1a)`;
 }
 function showPlanet(index) {
     if (!gameState.campaign.unlockedPlanets.includes(index)) return;
+    changeBackground(index);
     const planet = planetsData[index];
     const starsPerLevel = gameState.campaign.starsPerLevel;
     let totalStars = 0;
@@ -529,13 +497,15 @@ function buildCampaignGameUI(container, planet) {
             <div class="character-zone"><span class="astronaut" id="astronautC" onclick="tapAstronaut()">👨‍🚀</span><div class="speech" id="speechC">Уровень ${gameState.campaign.currentLevel+1}</div></div>
             <div class="star-track" id="starTrackC">${'<span class="star-icon">⭐</span>'.repeat(gameState.maxStars)}</div>
             <div class="visual-aid" id="visualAidC"></div>
-            <div class="task-box">
-                <span class="task-num" id="num1C">5</span><span class="task-op" id="opSignC">+</span>
-                <span class="task-num" id="num2C">3</span><span class="task-op equal-sign" id="eqSignC">=</span>
+            <div class="task-box" id="taskBoxC">
+                <span class="task-num" id="num1C">5</span>
+                <span class="task-op" id="opSignC">+</span>
+                <span class="task-num" id="num2C">3</span>
+                <span class="task-op">=</span>
                 <span class="task-unknown" id="unknownMarkC">?</span>
             </div>
             <div class="answer-field" id="answerFieldC"></div>
-            <div id="inputAreaC"><div class="keypad" id="keypadC"></div><div class="comparison-pad" id="comparisonPadC" style="display:none;"></div></div>
+            <div class="keypad" id="keypadC"></div>
             <button class="btn warn" onclick="exitCampaignLevel()">Выйти</button>
         </div>`;
     gameState.userInput = ''; updateAnswerField(); buildKeypad();
@@ -565,7 +535,7 @@ function resetCampaignConfirmed() {
     document.getElementById('confirmOverlay').classList.remove('open');
 }
 
-// ==================== КЛАВИАТУРЫ ====================
+// ==================== КЛАВИАТУРА ====================
 function buildKeypad() {
     const pad = document.getElementById('keypad') || document.getElementById('keypadC');
     if (pad) {
@@ -575,37 +545,14 @@ function buildKeypad() {
             <button class="key" onclick="pressDigit(7)">7</button><button class="key" onclick="pressDigit(8)">8</button><button class="key" onclick="pressDigit(9)">9</button>
             <button class="key key-clear" onclick="clearInput()">⌫</button><button class="key" onclick="pressDigit(0)">0</button><button class="key key-check" onclick="submitAnswer()">✓</button>`;
     }
-    const compPad = document.getElementById('comparisonPad') || document.getElementById('comparisonPadC');
-    if (compPad) {
-        compPad.innerHTML = `
-            <div class="comparison-controls">
-                <div class="comp-signs">
-                    <button class="comp-btn-sq" onclick="pressComparison('>')">&gt;</button>
-                    <button class="comp-btn-sq" onclick="pressComparison('<')">&lt;</button>
-                    <button class="comp-btn-sq" onclick="pressComparison('=')">=</button>
-                </div>
-                <div class="comp-actions">
-                    <button class="comp-btn-sq" onclick="clearInput()" style="background:#ff6b6b;">⌫</button>
-                    <button class="comp-btn-sq" onclick="submitAnswer()" style="background: var(--correct);">✓</button>
-                </div>
-            </div>`;
-    }
-}
-function setupInputMode(taskTopic) {
-    const isComp = (taskTopic === 'comparison');
-    const padId = gameState.mode === 'quick' ? 'comparisonPad' : 'comparisonPadC';
-    const keypadId = gameState.mode === 'quick' ? 'keypad' : 'keypadC';
-    const compPad = document.getElementById(padId);
-    const keypad = document.getElementById(keypadId);
-    if (compPad && keypad) {
-        compPad.style.display = isComp ? 'block' : 'none';
-        keypad.style.display = isComp ? 'none' : 'grid';
-    }
 }
 
 // ==================== ГЕНЕРАЦИЯ ====================
-function getMaxByDifficulty() { return gameState.difficulty==='easy'?10:gameState.difficulty==='medium'?20:50; }
-function chooseTopicForTask() { return gameState.topic!=='mixed'?gameState.topic:(Math.random()<0.5?'plusminus':'comparison'); }
+function getMaxByDifficulty() {
+    if (gameState.difficulty === 'easy') return 10;
+    if (gameState.difficulty === 'medium') return 50;
+    return 100;
+}
 function generateValidNumbers(op, max) {
     for(let i=0;i<50;i++) {
         let a = Math.floor(Math.random()*(max-1))+1;
@@ -618,76 +565,88 @@ function generateValidNumbers(op, max) {
 }
 function generateTask() {
     const max = getMaxByDifficulty();
-    const taskTopic = chooseTopicForTask();
-    const num1 = getEl('num1'), num2 = getEl('num2'), op = getEl('opSign'), unk = getEl('unknownMark'), eq = getEl('eqSign');
-    let a,b,answer;
-    if(eq) { eq.style.display='inline'; eq.textContent='='; }
-    if(unk) { unk.style.display='inline'; unk.textContent='?'; }
-    op.classList.remove('pulse');
-    num1.style.display='inline'; num2.style.display='inline'; op.style.display='inline';
-
-    if(taskTopic==='plusminus'){
+    if (gameState.topic === 'plusminus') {
         const isAdd = Math.random()<0.5;
-        const {a:v1,b:v2,answer:res}=generateValidNumbers(isAdd?'addition':'subtraction',max);
-        a=v1;b=v2;answer=res;
-        op.textContent=isAdd?'+':'-';
-        num1.textContent=a;num2.textContent=b;
-        unk.textContent='?'; unk.style.display='inline'; eq.style.display='inline';
-    }else if(taskTopic==='comparison'){
-        for(let i=0;i<20;i++){ a=Math.floor(Math.random()*max)+1; b=Math.floor(Math.random()*max)+1; if(a!==b)break; }
-        num1.textContent=a; num2.textContent=b;
-        op.textContent='?'; op.classList.add('pulse');
-        eq.style.display='none'; unk.style.display='none';
-        answer = a>b?'>':a<b?'<':'=';
+        const {a,b,answer} = generateValidNumbers(isAdd?'addition':'subtraction', max);
+        gameState.currentAnswer = answer;
+        const num1El = getEl('num1');
+        const num2El = getEl('num2');
+        const opEl = getEl('opSign');
+        const unkEl = getEl('unknownMark');
+        if (num1El) num1El.textContent = a;
+        if (num2El) num2El.textContent = b;
+        if (opEl) opEl.textContent = isAdd ? '+' : '-';
+        if (unkEl) unkEl.textContent = '?';
+        renderVisualAid(a, b, !isAdd);
+    } else if (gameState.topic === 'make') {
+        const target = max;
+        const known = Math.floor(Math.random() * target) + 1;
+        const answer = target - known;
+        gameState.currentAnswer = answer;
+        const taskBox = document.getElementById('taskBoxC');
+        if (taskBox) {
+            taskBox.innerHTML = `<span class="task-num">${known}</span><span class="task-op">+</span><span class="task-unknown">?</span><span class="task-op">=</span><span class="task-num">${target}</span>`;
+        }
+        renderVisualAid(known, answer, false);
+    } else if (gameState.topic === 'chain') {
+        const a = Math.floor(Math.random() * Math.floor(max/2)) + 1;
+        const b = Math.floor(Math.random() * Math.floor(max/2)) + 1;
+        const target = Math.floor(Math.random() * max) + 1;
+        const answer = target + b - a;
+        gameState.currentAnswer = answer;
+        const taskBox = document.getElementById('taskBoxC');
+        if (taskBox) {
+            taskBox.innerHTML = `<span class="task-unknown">?</span><span class="task-op">+</span><span class="task-num">${a}</span><span class="task-op">-</span><span class="task-num">${b}</span><span class="task-op">=</span><span class="task-num">${target}</span>`;
+        }
     }
-    gameState.currentAnswer=answer;
-    gameState.userInput=''; updateAnswerField();
-    setupInputMode(taskTopic);
-    renderVisualAid(taskTopic,a,b, op.textContent==='-');
+    gameState.userInput = '';
+    updateAnswerField();
 }
-function getEl(id){ return document.getElementById(id)||document.getElementById(id+'C'); }
-function renderVisualAid(taskTopic,val1,val2,isSub){
-    const container = document.getElementById('visualAid')||document.getElementById('visualAidC');
-    if(!container)return; container.innerHTML='';
-    if(taskTopic==='comparison')return;
-    const makeDots = (count,color)=>{
-        const rows = Math.ceil(count/10);
-        for(let r=0;r<rows;r++){
-            const row = document.createElement('div'); row.className='counter-row';
-            const dotsInRow = Math.min(10, count - r*10);
-            for(let i=0;i<dotsInRow;i++){
-                const dot = document.createElement('span'); dot.className='counter-dot';
-                dot.style.backgroundColor=color; dot.style.boxShadow=`0 0 10px ${color}`;
+function getEl(id) {
+    return document.getElementById(id) || document.getElementById(id+'C');
+}
+function renderVisualAid(val1, val2, isSub) {
+    const container = document.getElementById('visualAid') || document.getElementById('visualAidC');
+    if (!container) return;
+    container.innerHTML = '';
+    const makeDots = (count, color) => {
+        const rows = Math.ceil(count / 10);
+        for (let r = 0; r < rows; r++) {
+            const row = document.createElement('div');
+            row.className = 'counter-row';
+            const dotsInRow = Math.min(10, count - r * 10);
+            for (let i = 0; i < dotsInRow; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'counter-dot';
+                dot.style.backgroundColor = color;
+                dot.style.boxShadow = `0 0 10px ${color}`;
                 row.appendChild(dot);
             }
             container.appendChild(row);
         }
     };
-    makeDots(val1,'var(--green)');
-    if (isSub) makeDots(val2,'var(--red)');
-    else makeDots(val2,'var(--yellow)');
+    makeDots(val1, 'var(--green)');
+    if (isSub) makeDots(val2, 'var(--red)');
+    else makeDots(val2, 'var(--yellow)');
 }
 function pressDigit(d){ sfxClick(); if(gameState.userInput.length>=3)return; gameState.userInput+=d; updateAnswerField(); }
-function pressComparison(sign){ sfxClick(); gameState.userInput=sign; updateAnswerField(); }
 function clearInput(){ sfxClick(); gameState.userInput=''; updateAnswerField(); }
 function updateAnswerField(){
     const field = document.getElementById('answerField')||document.getElementById('answerFieldC');
-    const unk = document.getElementById('unknownMark')||document.getElementById('unknownMarkC');
     if(!field)return;
-    if(gameState.userInput===''){ field.textContent=''; field.classList.remove('filled'); if(unk)unk.style.display=''; }
-    else{ field.textContent=gameState.userInput; field.classList.add('filled'); if(unk)unk.style.display='none'; }
+    if(gameState.userInput===''){ field.textContent=''; field.classList.remove('filled'); }
+    else{ field.textContent=gameState.userInput; field.classList.add('filled'); }
 }
 function submitAnswer(){
     if(gameState.userInput==='')return;
-    const playerAnswer = (chooseTopicForTask()==='comparison')?gameState.userInput:parseInt(gameState.userInput);
-    if(playerAnswer===gameState.currentAnswer) onCorrect(); else onWrong();
+    if(parseInt(gameState.userInput)==gameState.currentAnswer) onCorrect(); else onWrong();
 }
 function onCorrect(){
     sfxCorrect(); gameState.totalCorrect++; gameState.totalStarsEver++;
     if(gameState.mode==='quick'){
         gameState.stars++; updateStarsDisplay();
-        if(gameState.stars>=5){ setTimeout(showWinQuick, 600); return; }
-    }else if(gameState.mode==='campaign'){
+        if(gameState.stars>=5){ setTimeout(showWinQuick,600); return; }
+    }else{
         gameState.stars++; updateStarsDisplayCampaign();
         const key = `${gameState.campaign.currentPlanet}-${gameState.campaign.currentLevel}`;
         const prev = gameState.campaign.starsPerLevel[key]||0;
@@ -695,7 +654,7 @@ function onCorrect(){
             gameState.campaign.starsPerLevel[key]=gameState.stars;
             checkPlanetCompletion();
             saveCampaignProgress();
-        } else { updateGlobalStarsDisplay(); }
+        }
         if(gameState.stars>=5){ setTimeout(completeLevel,600); return; }
     }
     setTimeout(generateTask,800); saveStats();
@@ -703,16 +662,13 @@ function onCorrect(){
 function onWrong(){
     sfxWrong(); gameState.totalWrong++;
     const field = document.getElementById('answerField')||document.getElementById('answerFieldC');
-    field.textContent=gameState.currentAnswer; field.classList.add('wrong-flash');
-    setTimeout(()=>{gameState.userInput=''; updateAnswerField(); field.classList.remove('wrong-flash');},1200);
+    field.textContent=gameState.currentAnswer;
+    setTimeout(()=>{gameState.userInput=''; updateAnswerField();},1200);
     saveStats();
 }
 function updateStarsDisplay(){ const track=document.getElementById('starTrack'); if(track)Array.from(track.children).forEach((s,i)=>s.classList.toggle('collected',i<gameState.stars)); if(gameState.stars>0)sfxStar(); }
 function updateStarsDisplayCampaign(){ const track=document.getElementById('starTrackC'); if(track)Array.from(track.children).forEach((s,i)=>s.classList.toggle('collected',i<gameState.stars)); if(gameState.stars>0)sfxStar(); }
-function completeLevel(){
-    showInfo(`Уровень пройден на ${gameState.stars} звёзд!`);
-    exitCampaignLevel();
-}
+function completeLevel(){ showInfo('Уровень пройден!'); exitCampaignLevel(); }
 function checkPlanetCompletion(){
     const planetId = gameState.campaign.currentPlanet;
     const planet = planetsData[planetId];
@@ -721,7 +677,6 @@ function checkPlanetCompletion(){
     if(total >= planet.threshold && !gameState.campaign.unlockedPlanets.includes(planetId+1) && planetId+1 < planetsData.length){
         gameState.campaign.unlockedPlanets.push(planetId+1);
         saveCampaignProgress();
-        showInfo('Открыта новая планета!');
     }
 }
 function showWinQuick(){
@@ -729,13 +684,11 @@ function showWinQuick(){
     document.getElementById('winTitle').textContent='Молодец!';
     document.getElementById('winMsg').textContent='Ты собрал все звёзды!';
     document.getElementById('winActionBtn').textContent='Играть ещё';
-    document.getElementById('winExitBtn').style.display='none';
     document.getElementById('winOverlay').classList.add('open');
     window._winAction='quick_replay';
     sfxWin();
 }
 function handleWinAction(){ document.getElementById('winOverlay').classList.remove('open'); if(window._winAction==='quick_replay') startQuickGame(); }
-function handleWinExit(){ document.getElementById('winOverlay').classList.remove('open'); exitCampaignLevel(); }
 
 function openStats(){
     sfxClick();
@@ -754,7 +707,7 @@ function tapAstronaut(){ playTone(350,0.08,'sine',0.06); const a=document.getEle
 loadStats();
 updateGlobalStarsDisplay();
 document.addEventListener('touchstart', e => {
-    if(e.target.matches('.key, .comp-btn-sq, .diff-btn, .topic-chip')) {
+    if(e.target.matches('.key, .diff-btn, .topic-chip, .planet-arrow')) {
         e.preventDefault();
         e.target.click();
     }
