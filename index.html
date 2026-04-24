@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Космическая математика 🚀 - Планеты v7</title>
+    <title>Космическая математика 🚀 - Планеты v8</title>
     <style>
         :root {
             --bg: #0a0a1a;
@@ -129,7 +129,7 @@
         .task-unknown { font-size: 48px; font-weight: 900; color: var(--yellow); animation: unknownPulse 1.2s infinite; }
         @keyframes unknownPulse { 0%,100%{ opacity:1; transform: scale(1); } 50%{ opacity:0.4; transform: scale(1.05); } }
         .visual-aid { display: flex; flex-direction: column; align-items: center; margin: 10px 0; gap: 6px; }
-        .counter-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; } /* кружки справа */
+        .counter-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
         .counter-dot {
             width: 22px; height: 22px; border-radius: 50%;
             background: var(--green); box-shadow: 0 0 10px rgba(78,204,163,0.7);
@@ -358,7 +358,7 @@ function showScreen(id) {
 }
 function goToMenu() { sfxClick(); showScreen('menuScreen'); }
 
-// Глобальный счётчик звёзд (общий)
+// Глобальный счётчик звёзд
 function updateGlobalStarsDisplay() {
     let total = 0;
     for (const key in gameState.campaign.starsPerLevel) {
@@ -504,11 +504,6 @@ function buildCampaignGameUI(container, planet, isBonus = false) {
     gameState.userInput = ''; updateAnswerField(); buildKeypad();
     if (isBonus) {
         document.getElementById('starTrackC').style.display = 'none';
-        // Запускаем таймер после построения DOM
-        setTimeout(() => {
-            const timerEl = document.getElementById('bonusTimer');
-            if (timerEl && !window.bonusInterval) startBonusTimer(60);
-        }, 100);
     }
 }
 function exitCampaignLevel() {
@@ -527,6 +522,8 @@ function startBonusLevel(planetId) {
     const area = document.getElementById('campaignPlayArea');
     area.style.display = 'block';
     buildCampaignGameUI(area, planet, true);
+    startBonusTimer(60);
+    generateTask(); // Генерируем первое задание
 }
 function startBonusTimer(sec) {
     let time = sec;
@@ -659,7 +656,6 @@ function renderVisualAid(taskTopic,val1,val2,isSub){
     };
     makeDots(val1,'var(--green)');
     if (isSub) {
-        // вычитание: показываем вычитаемое красными кружками
         makeDots(val2,'var(--red)');
     } else {
         makeDots(val2,'var(--yellow)');
@@ -693,9 +689,8 @@ function onCorrect(){
             if(gameState.stars>prev){
                 gameState.campaign.starsPerLevel[key]=gameState.stars;
                 checkPlanetCompletion();
-                saveCampaignProgress(); // включает updateGlobalStarsDisplay
+                saveCampaignProgress();
             } else {
-                // всё равно обновим глобальный счётчик, так как звёзды кампании могли не измениться, но общий арифметический не менялся
                 updateGlobalStarsDisplay();
             }
             if(gameState.stars>=5){ setTimeout(completeLevel,600); return; }
@@ -767,7 +762,13 @@ function tapAstronaut(){ playTone(350,0.08,'sine',0.06); const a=document.getEle
 // Запуск
 loadStats();
 updateGlobalStarsDisplay();
-document.addEventListener('touchstart', e => { if(e.target.matches('.key, .comp-btn-sq, .diff-btn, .topic-chip, .menu-btn')) e.preventDefault(); }, {passive: false});
+// Исправленный обработчик касаний – не блокирует menu-btn
+document.addEventListener('touchstart', e => {
+    if(e.target.matches('.key, .comp-btn-sq, .diff-btn, .topic-chip')) {
+        e.preventDefault();
+        e.target.click();
+    }
+}, {passive: false});
 </script>
 </body>
 </html>
