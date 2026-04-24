@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Космическая математика 🚀 - Планеты v8</title>
+    <title>Космическая математика 🚀 - Планеты v9</title>
     <style>
         :root {
             --bg: #0a0a1a;
@@ -40,7 +40,17 @@
                         radial-gradient(2px 2px at 70% 35%, #4ecca3, transparent),
                         radial-gradient(1px 1px at 85% 55%, white, transparent);
         }
-        .screen { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 520px; padding: 20px; position: relative; z-index: 1; }
+        .screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
         .screen.active { display: flex; }
 
         .btn {
@@ -66,7 +76,10 @@
         }
 
         /* Стартовое меню */
-        .menu-container { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; width: 100%; margin-top: 30px; }
+        .menu-container {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 20px; width: 100%; margin-top: 30px;
+        }
         .rocket-area { position: relative; margin-bottom: 20px; }
         .rocket { font-size: 80px; position: relative; z-index: 1; }
         .menu-title { font-size: 48px; font-weight: 900; color: white; text-shadow: 0 0 30px rgba(255,255,255,0.5); }
@@ -129,7 +142,7 @@
         .task-unknown { font-size: 48px; font-weight: 900; color: var(--yellow); animation: unknownPulse 1.2s infinite; }
         @keyframes unknownPulse { 0%,100%{ opacity:1; transform: scale(1); } 50%{ opacity:0.4; transform: scale(1.05); } }
         .visual-aid { display: flex; flex-direction: column; align-items: center; margin: 10px 0; gap: 6px; }
-        .counter-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+        .counter-row { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-start; }
         .counter-dot {
             width: 22px; height: 22px; border-radius: 50%;
             background: var(--green); box-shadow: 0 0 10px rgba(78,204,163,0.7);
@@ -184,16 +197,52 @@
         .level-cell.completed { background: var(--correct); color: black; }
         .progress-info { text-align: center; color: white; margin: 5px 0; font-size: 14px; }
         .planet-arrow { font-size: 36px; background: none; border: none; color: white; cursor: pointer; }
+
+        /* Оверлеи */
+        .overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.7);
+            display: none; /* скрыто по умолчанию */
+            justify-content: center; align-items: center;
+            z-index: 20;
+        }
+        .overlay.open {
+            display: flex; /* показываем */
+        }
+        .dialog {
+            background: white; border-radius: 30px; padding: 30px; text-align: center;
+            max-width: 340px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .dialog h2 { font-size: 28px; margin: 10px 0; }
+        .big-emoji { font-size: 80px; }
+        .btn-sm { padding: 10px 20px; font-size: 16px; border-radius: 20px; }
+
+        /* Адаптивность */
+        @media (max-width: 400px) {
+            .task-num { font-size: 36px; min-width: 40px; }
+            .task-op { font-size: 28px; }
+            .task-unknown { font-size: 36px; }
+            .key { font-size: 26px; padding: 10px 0; }
+            .comp-btn-sq { width: 55px; height: 55px; font-size: 28px; }
+            .planet-card-round { width: 150px; height: 150px; }
+            .planet-card-round div:first-child { font-size: 40px; }
+            .level-cell { width: 32px; height: 32px; font-size: 12px; }
+            .menu-title { font-size: 36px; }
+            .menu-btn { font-size: 20px; padding: 15px; }
+            .global-stars { font-size: 18px; top: 10px; right: 60px; }
+            .rocket { font-size: 60px; }
+            .astronaut { font-size: 60px; }
+            .character-zone { width: 90px; height: 90px; }
+        }
     </style>
 </head>
 <body>
 <div class="cosmos"><div class="star-field"></div></div>
 
-<!-- Глобальный счётчик звёзд -->
 <div class="global-stars" id="globalStarsDisplay">⭐ 0</div>
 <button class="sound-toggle" id="soundToggle" onclick="toggleSound()" style="position:fixed;top:20px;right:20px;z-index:15;background:rgba(255,255,255,0.1);border:none;font-size:28px;padding:8px;border-radius:50%;cursor:pointer;">🔊</button>
 
-<!-- СТАРТОВОЕ МЕНЮ -->
+<!-- Главное меню -->
 <div class="screen active" id="menuScreen">
     <div class="menu-container">
         <div class="rocket-area"><div class="rocket">🚀</div></div>
@@ -208,7 +257,7 @@
     </div>
 </div>
 
-<!-- БЫСТРАЯ ИГРА -->
+<!-- Быстрая игра -->
 <div class="screen" id="quickGameScreen">
     <div class="quick-top-bar">
         <button class="back-btn" onclick="goToMenu()">←</button>
@@ -222,7 +271,7 @@
     <div class="game-card" id="quickGameCard"></div>
 </div>
 
-<!-- КАМПАНИЯ -->
+<!-- Кампания -->
 <div class="screen" id="campaignScreen">
     <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:20px;">
         <button class="back-btn" onclick="goToMenu()">←</button>
@@ -232,7 +281,7 @@
     <div id="campaignPlayArea" style="display:none; width:100%;"></div>
 </div>
 
-<!-- ОВЕРЛЕИ -->
+<!-- Оверлей победы -->
 <div class="overlay" id="winOverlay">
     <div class="dialog">
         <div class="big-emoji" id="winEmoji">🏆</div>
@@ -244,6 +293,8 @@
         </div>
     </div>
 </div>
+
+<!-- Информационное окно -->
 <div class="overlay" id="infoOverlay">
     <div class="dialog">
         <h2 id="infoTitle"></h2>
@@ -251,6 +302,8 @@
         <button class="btn primary" onclick="closeInfo()">OK</button>
     </div>
 </div>
+
+<!-- Настройки -->
 <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
     <div class="dialog" style="background:#1a1a3e; color:white;" onclick="event.stopPropagation()">
         <h3>⚙️ Настройки</h3>
@@ -258,6 +311,8 @@
         <button class="btn" onclick="closeSettingsManual()">Закрыть</button>
     </div>
 </div>
+
+<!-- Подтверждение сброса -->
 <div class="overlay" id="confirmOverlay">
     <div class="dialog">
         <p>Вы уверены, что хотите сбросить весь прогресс кампании?</p>
@@ -267,7 +322,7 @@
 </div>
 
 <script>
-// Звук
+// ==================== ЗВУК ====================
 let soundEnabled = true;
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -296,7 +351,7 @@ function toggleSound() {
     if(soundEnabled) sfxClick();
 }
 
-// Данные планет с уровнями
+// ==================== ДАННЫЕ ====================
 const planetsData = [
     {
         id: 0, name: 'Зелёная', icon: '🟢', topic: 'plusminus', color: 'var(--green)',
@@ -330,7 +385,7 @@ const planetsData = [
     }
 ];
 
-// Состояние игры
+// ==================== СОСТОЯНИЕ ====================
 const gameState = {
     mode: 'quick',
     difficulty: 'easy',
@@ -351,24 +406,21 @@ const gameState = {
     }
 };
 
-// Экраны
+// ==================== ЭКРАНЫ ====================
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
 }
 function goToMenu() { sfxClick(); showScreen('menuScreen'); }
 
-// Глобальный счётчик звёзд
+// ==================== ГЛОБАЛЬНЫЙ СЧЁТЧИК ====================
 function updateGlobalStarsDisplay() {
     let total = 0;
-    for (const key in gameState.campaign.starsPerLevel) {
-        total += gameState.campaign.starsPerLevel[key];
-    }
-    const el = document.getElementById('globalStarsDisplay');
-    if (el) el.textContent = `⭐ ${total}`;
+    for (const key in gameState.campaign.starsPerLevel) total += gameState.campaign.starsPerLevel[key];
+    document.getElementById('globalStarsDisplay').textContent = `⭐ ${total}`;
 }
 
-// Быстрая игра
+// ==================== БЫСТРАЯ ИГРА ====================
 function startQuickGame() {
     gameState.mode = 'quick'; gameState.stars = 0;
     gameState.difficulty = 'easy'; gameState.topic = 'plusminus';
@@ -417,7 +469,7 @@ function setQuickTopic(topic) {
     gameState.stars=0; updateStarsDisplay(); generateTask();
 }
 
-// Кампания
+// ==================== КАМПАНИЯ ====================
 function startCampaign() {
     gameState.mode = 'campaign';
     loadCampaignProgress();
@@ -441,12 +493,11 @@ function showPlanet(index) {
     const planet = planetsData[index];
     const starsPerLevel = gameState.campaign.starsPerLevel;
     let totalStars = 0;
-    planet.levels.forEach((_, idx) => { totalStars += starsPerLevel[`${index}-${idx}`] || 0; });
+    planet.levels.forEach((_, idx) => totalStars += starsPerLevel[`${index}-${idx}`] || 0);
     const allMax = planet.levels.every((_, idx) => (starsPerLevel[`${index}-${idx}`] || 0) === 5);
     const bonusAvailable = allMax && !gameState.campaign.bonusCompleted[index];
-    const nextThreshold = planet.threshold;
-    const nextPlanetUnlocked = gameState.campaign.unlockedPlanets.includes(index + 1);
-    const thresholdText = nextPlanetUnlocked ? '' : `Следующая планета откроется на ${nextThreshold} звёздах (сейчас ${totalStars})`;
+    const nextPlanetUnlocked = gameState.campaign.unlockedPlanets.includes(index+1);
+    const thresholdText = nextPlanetUnlocked ? '' : `Следующая планета откроется на ${planet.threshold} звёздах (сейчас ${totalStars})`;
     const bonusText = allMax ? 'Бонус открыт!' : `Бонусный уровень откроется на 50 звёздах (сейчас ${totalStars})`;
 
     const view = document.getElementById('planetView');
@@ -457,7 +508,7 @@ function showPlanet(index) {
                 <div style="font-size:60px;">${planet.icon}</div>
                 <div style="color:white;">${planet.name}</div>
             </div>
-            <button class="planet-arrow" onclick="showPlanet(${index+1})" ${!gameState.campaign.unlockedPlanets.includes(index+1)?'disabled':''} style="visibility:${!gameState.campaign.unlockedPlanets.includes(index+1)?'hidden':'visible'};">▶</button>
+            <button class="planet-arrow" onclick="showPlanet(${index+1})" ${!nextPlanetUnlocked?'disabled':''} style="visibility:${!nextPlanetUnlocked?'hidden':'visible'};">▶</button>
         </div>
         <div class="level-grid">
             ${planet.levels.map((_, idx) => {
@@ -502,9 +553,7 @@ function buildCampaignGameUI(container, planet, isBonus = false) {
             <button class="btn warn" onclick="exitCampaignLevel()">Выйти</button>
         </div>`;
     gameState.userInput = ''; updateAnswerField(); buildKeypad();
-    if (isBonus) {
-        document.getElementById('starTrackC').style.display = 'none';
-    }
+    if (isBonus) document.getElementById('starTrackC').style.display = 'none';
 }
 function exitCampaignLevel() {
     document.getElementById('campaignPlayArea').style.display = 'none';
@@ -523,7 +572,7 @@ function startBonusLevel(planetId) {
     area.style.display = 'block';
     buildCampaignGameUI(area, planet, true);
     startBonusTimer(60);
-    generateTask(); // Генерируем первое задание
+    generateTask();
 }
 function startBonusTimer(sec) {
     let time = sec;
@@ -548,15 +597,26 @@ function finishBonusLevel() {
     exitCampaignLevel();
 }
 
-// Информационное окно
+// ==================== ОКНА ====================
 function showInfo(msg) {
     document.getElementById('infoTitle').textContent = 'Сообщение';
     document.getElementById('infoMsg').textContent = msg;
     document.getElementById('infoOverlay').classList.add('open');
 }
 function closeInfo() { document.getElementById('infoOverlay').classList.remove('open'); }
+function openSettings() { document.getElementById('settingsOverlay').classList.add('open'); }
+function closeSettings(e) { if(e.target === document.getElementById('settingsOverlay')) document.getElementById('settingsOverlay').classList.remove('open'); }
+function closeSettingsManual() { document.getElementById('settingsOverlay').classList.remove('open'); sfxClick(); }
+function confirmReset() { document.getElementById('settingsOverlay').classList.remove('open'); document.getElementById('confirmOverlay').classList.add('open'); }
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('open'); }
+function resetCampaignConfirmed() {
+    gameState.campaign = { currentPlanet:0, currentLevel:0, starsPerLevel:{}, unlockedPlanets:[0], bonusCompleted:{} };
+    saveCampaignProgress();
+    showPlanet(0);
+    document.getElementById('confirmOverlay').classList.remove('open');
+}
 
-// Клавиатуры
+// ==================== КЛАВИАТУРЫ ====================
 function buildKeypad() {
     const pad = document.getElementById('keypad') || document.getElementById('keypadC');
     if (pad) {
@@ -594,7 +654,7 @@ function setupInputMode(taskTopic) {
     }
 }
 
-// Генерация примеров
+// ==================== ГЕНЕРАЦИЯ ====================
 function getMaxByDifficulty() { return gameState.difficulty==='easy'?10:gameState.difficulty==='medium'?20:50; }
 function chooseTopicForTask() { return gameState.topic!=='mixed'?gameState.topic:(Math.random()<0.5?'plusminus':'comparison'); }
 function generateValidNumbers(op, max) {
@@ -612,8 +672,8 @@ function generateTask() {
     const taskTopic = chooseTopicForTask();
     const num1 = getEl('num1'), num2 = getEl('num2'), op = getEl('opSign'), unk = getEl('unknownMark'), eq = getEl('eqSign');
     let a,b,answer;
-    if(eq){ eq.style.display='inline'; eq.textContent='='; }
-    if(unk){ unk.style.display='inline'; unk.textContent='?'; }
+    if(eq) { eq.style.display='inline'; eq.textContent='='; }
+    if(unk) { unk.style.display='inline'; unk.textContent='?'; }
     op.classList.remove('pulse');
     num1.style.display='inline'; num2.style.display='inline'; op.style.display='inline';
 
@@ -655,11 +715,8 @@ function renderVisualAid(taskTopic,val1,val2,isSub){
         }
     };
     makeDots(val1,'var(--green)');
-    if (isSub) {
-        makeDots(val2,'var(--red)');
-    } else {
-        makeDots(val2,'var(--yellow)');
-    }
+    if (isSub) makeDots(val2,'var(--red)');
+    else makeDots(val2,'var(--yellow)');
 }
 function pressDigit(d){ sfxClick(); if(gameState.userInput.length>=3)return; gameState.userInput+=d; updateAnswerField(); }
 function pressComparison(sign){ sfxClick(); gameState.userInput=sign; updateAnswerField(); }
@@ -680,7 +737,7 @@ function onCorrect(){
     sfxCorrect(); gameState.totalCorrect++; gameState.totalStarsEver++;
     if(gameState.mode==='quick'){
         gameState.stars++; updateStarsDisplay();
-        if(gameState.stars>=5){ setTimeout(showWinQuick,600); return; }
+        if(gameState.stars>=5){ setTimeout(showWinQuick, 600); return; }
     }else if(gameState.mode==='campaign'){
         if(gameState.campaign.currentLevel>=0){
             gameState.stars++; updateStarsDisplayCampaign();
@@ -690,9 +747,7 @@ function onCorrect(){
                 gameState.campaign.starsPerLevel[key]=gameState.stars;
                 checkPlanetCompletion();
                 saveCampaignProgress();
-            } else {
-                updateGlobalStarsDisplay();
-            }
+            } else { updateGlobalStarsDisplay(); }
             if(gameState.stars>=5){ setTimeout(completeLevel,600); return; }
         }else{ gameState.stars++; }
     }
@@ -715,7 +770,7 @@ function checkPlanetCompletion(){
     const planetId = gameState.campaign.currentPlanet;
     const planet = planetsData[planetId];
     let total = 0;
-    planet.levels.forEach((_, idx) => { total += gameState.campaign.starsPerLevel[`${planetId}-${idx}`]||0; });
+    planet.levels.forEach((_, idx) => total += gameState.campaign.starsPerLevel[`${planetId}-${idx}`]||0);
     if(total >= planet.threshold && !gameState.campaign.unlockedPlanets.includes(planetId+1) && planetId+1 < planetsData.length){
         gameState.campaign.unlockedPlanets.push(planetId+1);
         saveCampaignProgress();
@@ -723,46 +778,36 @@ function checkPlanetCompletion(){
     }
 }
 function showWinQuick(){
-    sfxWin();
-    document.getElementById('winEmoji').textContent='🏆'; document.getElementById('winTitle').textContent='Молодец!';
+    document.getElementById('winEmoji').textContent='🏆';
+    document.getElementById('winTitle').textContent='Молодец!';
     document.getElementById('winMsg').textContent='Ты собрал все звёзды!';
-    document.getElementById('winActionBtn').textContent='Играть ещё'; document.getElementById('winExitBtn').style.display='none';
-    document.getElementById('winOverlay').classList.add('open'); window._winAction='quick_replay';
+    document.getElementById('winActionBtn').textContent='Играть ещё';
+    document.getElementById('winExitBtn').style.display='none';
+    document.getElementById('winOverlay').classList.add('open');
+    window._winAction='quick_replay';
+    sfxWin();
 }
 function handleWinAction(){ document.getElementById('winOverlay').classList.remove('open'); if(window._winAction==='quick_replay') startQuickGame(); }
 function handleWinExit(){ document.getElementById('winOverlay').classList.remove('open'); exitCampaignLevel(); }
 
-// Статистика и настройки
-function openStats(){ sfxClick(); updateStatsDialog(); document.getElementById('statsOverlay')?.classList.add('open'); }
-function updateStatsDialog(){
+// Статистика
+function openStats(){
+    sfxClick();
     const acc = gameState.totalCorrect+gameState.totalWrong>0?Math.round(gameState.totalCorrect/(gameState.totalCorrect+gameState.totalWrong)*100):100;
     document.getElementById('statsContent').innerHTML = `<p>✅ Правильно: <b>${gameState.totalCorrect}</b></p><p>❌ Ошибок: <b>${gameState.totalWrong}</b></p><p>🎯 Точность: <b>${acc}%</b></p><p>⭐ Всего звёзд: <b>${gameState.totalStarsEver}</b></p>`;
+    document.getElementById('statsOverlay')?.classList.add('open');
 }
 function closeStats(e){ if(e.target===document.getElementById('statsOverlay')) document.getElementById('statsOverlay').classList.remove('open'); }
 function closeStatsManual(){ document.getElementById('statsOverlay').classList.remove('open'); sfxClick(); }
-function resetStats(){ gameState.totalCorrect=0; gameState.totalWrong=0; gameState.totalStarsEver=0; saveStats(); updateStatsDialog(); }
 function saveStats(){ localStorage.setItem('cosmoStats',JSON.stringify({correct:gameState.totalCorrect,wrong:gameState.totalWrong,stars:gameState.totalStarsEver})); }
 function loadStats(){
     try{ const raw=localStorage.getItem('cosmoStats'); if(raw){ const d=JSON.parse(raw); gameState.totalCorrect=d.correct||0; gameState.totalWrong=d.wrong||0; gameState.totalStarsEver=d.stars||0; } }catch(e){}
-}
-function openSettings(){ document.getElementById('settingsOverlay').classList.add('open'); }
-function closeSettings(e){ if(e.target===document.getElementById('settingsOverlay')) document.getElementById('settingsOverlay').classList.remove('open'); }
-function closeSettingsManual(){ document.getElementById('settingsOverlay').classList.remove('open'); sfxClick(); }
-function confirmReset(){ document.getElementById('settingsOverlay').classList.remove('open'); document.getElementById('confirmOverlay').classList.add('open'); }
-function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('open'); }
-function resetCampaignConfirmed(){
-    gameState.campaign = { currentPlanet:0, currentLevel:0, starsPerLevel:{}, unlockedPlanets:[0], bonusCompleted:{} };
-    saveCampaignProgress();
-    updateGlobalStarsDisplay();
-    showPlanet(0);
-    document.getElementById('confirmOverlay').classList.remove('open');
 }
 function tapAstronaut(){ playTone(350,0.08,'sine',0.06); const a=document.getElementById('astronaut')||document.getElementById('astronautC'); if(a){a.classList.add('bounce');setTimeout(()=>a.classList.remove('bounce'),600);} }
 
 // Запуск
 loadStats();
 updateGlobalStarsDisplay();
-// Исправленный обработчик касаний – не блокирует menu-btn
 document.addEventListener('touchstart', e => {
     if(e.target.matches('.key, .comp-btn-sq, .diff-btn, .topic-chip')) {
         e.preventDefault();
